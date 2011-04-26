@@ -1,26 +1,53 @@
 using "geb"
- 
-scenario "scripting style", {
- 
-    when "we go to google", {
-        go "http://google.com"
-    }
- 
-    then "we are at google", {
-        page.title.shouldBe "Google"
-    }
- 
-    when "we search for chuck", {
-        $("input", name: "q").value("chuck norris")
-        $("input", value: "Google Search").click()
-    }
- 
-    then "we are now at the results page", {
-        page.title.shouldEndWith "Google Search"
-    }
- 
-    and "we get straight up norris", {
-        $("li.g", 0).find("a.l").text().shouldStartWith "Chuck Norris"
-    }
- 
+
+import geb.test.util.CallbackHttpServer
+
+scenario "using geb", {
+
+	given "geb goodness", {
+		server = new CallbackHttpServer()
+		server.start()
+		baseUrl = server.baseUrl
+
+		server.get = { req, res ->
+			res.outputStream << """
+			<html>
+			<head>
+				<script type="text/javascript">
+					var v = 1;
+				</script>
+			</head>
+			<body>
+				<div class="d1" id="d1">d1</div>
+			</body>
+			</html>"""
+		}
+	}
+
+	when "to", {
+		browser.driver.javascriptEnabled = true
+		to SomePage
+	}
+
+	then "at", {
+		at SomePage
+	}
+
+	and "can get js object", {
+		js.v.shouldBe 1
+	}
+
+	and "page stuff", {
+		page.div.text().shouldBe "d1"
+	}
+
+	and "stop server", {
+		server.stop()
+	}
+}
+
+class SomePage extends geb.Page {
+	static content = {
+		div { $("#d1") }
+	}
 }
