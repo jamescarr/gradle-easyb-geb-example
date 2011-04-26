@@ -7,8 +7,8 @@ repositories {
 dependencies {
 	testCompile 'org.codehaus.geb:geb-core:0.5.1'
 	testCompile 'org.codehaus.geb:geb-easyb:0.5.1'
-	testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.0b3'
-	testCompile ('org.easyb:easyb:0.9.6') { transitive = true }
+	testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.0a1'
+	testCompile ('org.easyb:easyb:0.9.6') 
 }
 
 
@@ -16,7 +16,7 @@ test.doLast {
    ant.taskdef(name: "easyb", classname:"org.easyb.ant.BehaviorRunnerTask", classpath: sourceSets.test.runtimeClasspath.asPath)
 
     ant.easyb( classpath: sourceSets.test.runtimeClasspath.asPath, failureProperty:'easyb_failed' ) {
-        report( location:"${project.testResultsDir}/story.txt", format:"txtstory" )
+        report( location:"${project.testResultsDir}/story.html", format:"html" )
         behaviors( dir: "src/test/stories" ) {
             include( name:"**/*.story" )
         }
