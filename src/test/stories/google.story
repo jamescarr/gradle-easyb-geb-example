@@ -12,13 +12,11 @@ scenario "scripting style", {
  
     when "we search for chuck", {
         $("input", name: "q").value("chuck norris")
-	waitFor {
-        	$("li.g", 0).find("a.l").present
-	}
+        $("input", value: "Google Search").click()
     }
  
     then "we are now at the results page", {
-        page.title.shouldEndWith "Google"
+        page.title.shouldEndWith "Google Search"
     }
  
     and "we get straight up norris", {
